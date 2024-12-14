@@ -55,11 +55,11 @@
             <!-- Search form -->
             <form action="{{ route('keluarbarang.index') }}" method="GET" class="mb-3">
                 <div class="row g-2">
-                    <div class="col-md-8">
-                        <input type="text" name="search" class="form-control" placeholder="Cari berdasarkan kode_barang" value="{{ request('search') }}" aria-label="Cari berdasarkan kode barang">
+                <div class="col-auto">
+                        <input class="form-control form-control-sm" type="search" name="katakunci" value="{{ request('katakunci') }}" placeholder="Cari...">
                     </div>
-                    <div class="col-md-4">
-                        <button type="submit" class="btn btn-info w-100">Cari</button>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-sm btn-primary">Cari</button>
                     </div>
                 </div>
             </form>
@@ -86,7 +86,7 @@
                                 <td>{{ $keluarBarang->nama_barang }}</td>
                                 <td>{{ $keluarBarang->jumlah_keluar }}</td>
                                 <td>{{ $keluarBarang->unitKerja->Nama_Unit }} - {{ $keluarBarang->unitKerja->DAOP }}</td>
-                                <td>{{ $keluarBarang->tanggal_keluar }}</td>
+                                <td>{{ $keluarBarang->created_at->format('d-m-Y H:i') }}</td>
                                 <td>
                                     <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editKeluarBarangModal{{ $keluarBarang->id }}">Edit</button>
                                     <form action="{{ route('keluarbarang.destroy', $keluarBarang->id) }}" method="POST" style="display: inline;">

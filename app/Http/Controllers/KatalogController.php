@@ -20,6 +20,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use App\Exports\KatalogExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\KatalogImport;
 use Charts;
 
 class KatalogController extends Controller
@@ -83,6 +84,26 @@ class KatalogController extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan saat membuat file Excel: ' . $e->getMessage());
         }
     }
+
+    public function import(Request $request)
+    {
+        // Validasi file input
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv|max:2048', // Hanya menerima file Excel atau CSV dengan ukuran maksimal 2MB
+        ]);
+
+        try {
+            // Proses impor data menggunakan KatalogImport
+            Excel::import(new KatalogImport, $request->file('file'));
+
+            // Jika berhasil, arahkan kembali dengan pesan sukses
+            return redirect()->back()->with('success', 'Data berhasil diimpor!');
+        } catch (\Exception $e) {
+            // Tangani error saat impor
+            return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan saat mengimpor data katalog: ' . $e->getMessage()])->withInput();
+        }
+    }
+
 
     public function create()
     {

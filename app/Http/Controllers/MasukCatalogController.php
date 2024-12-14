@@ -12,11 +12,19 @@ class MasukCatalogController extends Controller
 {
     private const KODE_PREFIX = 'BM'; // Kode prefix untuk kode_masuk
 
-    public function index()
+    public function index(Request $request)
     {
+        $katakunci = $request->get('katakunci');
         $katalogs = Katalog::all();
         $units = UnitKerja::all();
-        $masukCatalogs = MasukCatalog::with(['katalog', 'unitKerja'])->paginate(10);
+        $masukCatalogs = MasukCatalog::with(['katalog', 'unitKerja'])
+        ->when($katakunci, function ($query, $katakunci) {
+            return $query->where('kode_masuk', 'LIKE', "%$katakunci%")
+                ->orWhere('kode_barang', 'LIKE', "%$katakunci%")
+                ->orWhere('barang', 'LIKE', "%$katakunci%");
+        })
+        ->paginate(10);
+    
         
         $totalMasukCatalog = MasukCatalog::sum('jumlah_masuk');
         
@@ -137,4 +145,5 @@ class MasukCatalogController extends Controller
 
         return redirect()->route('masukcatalog.index')->with('success', 'Data masuk catalog berhasil dihapus');
     }
-}
+} 
+

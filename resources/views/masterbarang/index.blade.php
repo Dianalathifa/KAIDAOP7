@@ -56,8 +56,31 @@
                         <input class="form-control form-control-sm" type="search" name="katakunci" value="{{ request('katakunci') }}" placeholder="Cari...">
                     </div>
                     <div class="col-auto">
-                        <button type="submit" class="btn btn-sm btn-primary">Filter</button>
+                        <button type="submit" class="btn btn-sm btn-primary">Cari</button>
                     </div>
+                    <form action="{{ route('masterbarang.export') }}" method="GET" class="row g-3 mb-3">
+    <!-- Dropdown untuk Tahun -->
+    <div class="col-auto">
+        <select class="form-select" name="tahun" id="tahun" required>
+            <option value="">Pilih Tahun</option>
+            @foreach($tahunOptions as $tahun)
+                <option value="{{ $tahun }}" {{ request('tahun') == $tahun ? 'selected' : '' }}>
+                    {{ $tahun }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+
+    <!-- Tombol Unduh Excel -->
+    <div class="col-auto">
+        <button type="submit" class="btn btn-success">
+            <i class="fas fa-file-excel"></i> Unduh Excel
+        </button>
+    </div>
+</form>
+
+                </div>
+             </form>
                 </div>
             </form>
         </div>

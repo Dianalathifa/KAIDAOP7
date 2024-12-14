@@ -9,14 +9,38 @@ use Illuminate\Http\Request;
 
 class MasterBarangController extends Controller
 {
+    public function exportExcel(Request $request)
+{
+    $tahun = $request->input('tahun');
+    
+    // Validasi input tahun
+    if (!$tahun || !is_numeric($tahun) || strlen($tahun) != 4) {
+        return redirect()->back()->with('error', 'Pilih tahun yang valid.');
+    }
+
+    try {
+        // Menggunakan export untuk MasterBarang
+        return Excel::download(new MasterBarangExport($tahun), 'master_barang_' . $tahun . '.xlsx');
+    } catch (\Exception $e) {
+        // Tangani error jika ada
+        return redirect()->back()->with('error', 'Terjadi kesalahan saat membuat file Excel: ' . $e->getMessage());
+    }
+}
+
     // Menampilkan daftar barang dengan paginasi
     public function index(Request $request)
     {
         $katakunci = $request->get('katakunci');
         $katalogs = Katalog::all();
         $masterBarangs = MasterBarang::when($katakunci, function ($query, $katakunci) {
-            return $query->where('nama_barang', 'LIKE', "%$katakunci%");
+            return $query->where('nama_barang', 'LIKE', "%$katakunci%")
+                 ->orWhere('kode_barang', 'LIKE', "%$katakunci%");
         })->paginate(10);
+
+        $tahunOptions = MasterBarang::selectRaw('YEAR(created_at) as tahun')
+        ->distinct()
+        ->orderBy('tahun', 'desc')
+        ->pluck('tahun');
 
         foreach ($masterBarangs as $barang) {
             $barang->barang_masuk = MasukCatalog::where('kode_barang', $barang->kode_barang)->sum('jumlah_masuk');
@@ -24,7 +48,7 @@ class MasterBarangController extends Controller
             $barang->save();
         }
 
-        return view('masterbarang.index', compact('masterBarangs', 'katalogs'));
+        return view('masterbarang.index', compact('masterBarangs', 'katalogs', 'tahunOptions'));
     }
 
     // Mengambil detail item berdasarkan kode_barang

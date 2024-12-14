@@ -95,6 +95,8 @@ Route::put('update/{id}', [KatalogController::class, 'update'])->name('updatekat
 Route::get('/get-kode-barang', [KatalogController::class, 'getKodeBarang'])->name('get.kode.barang');
 Route::get('/export-excel', [KatalogController::class, 'exportExcel'])->name('export.excel');
 Route::get('/get-next-sequence-number/{klasifikasi}', [KatalogController::class,'getNextSequenceNumber']);
+Route::post('/katalog/import', [KatalogController::class, 'import'])->name('katalog.import');
+
 
 
 Route::resource('satuantambah', SatuanController::class);
@@ -133,6 +135,7 @@ Route::resource('masterbarang', MasterBarangController::class);
     Route::delete('/masterbarang/{id}', [MasterBarangController::class, 'destroy'])->name('masterbarang.destroy');
     Route::get('/get-item-details/{kode_barang}', [MasterBarangController::class, 'getItemDetails'])->name('get.item.details'); 
     Route::get('/get-barang-masuk/{kode_barang}', [MasterBarangController::class, 'getBarangMasuk'])->name('get.barang.masuk');
+    Route::get('/masterbarang/export', [MasterBarangController::class, 'exportExcel'])->name('masterbarang.export');
 
 
     Route::resource('masukcatalog', MasukCatalogController::class);

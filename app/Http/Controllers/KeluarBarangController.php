@@ -12,11 +12,18 @@ class KeluarBarangController extends Controller
 {
     private const KODE_PREFIX = 'BK'; // Kode prefix untuk kode_keluar
 
-    public function index()
+    public function index(Request $request)
     {
+        $katakunci = $request->get('katakunci');
         $katalogs = Katalog::all();
         $units = UnitKerja::all();
-        $keluarBarangs = KeluarBarangCatalog::with(['katalog', 'unitKerja'])->paginate(10);
+        $keluarBarangs = KeluarBarangCatalog::with(['katalog', 'unitKerja'])
+        ->when($katakunci, function ($query, $katakunci) {
+            return $query->where('kode_keluar', 'LIKE', "%$katakunci%")
+                ->orWhere('kode_barang', 'LIKE', "%$katakunci%")
+                ->orWhere('nama_barang', 'LIKE', "%$katakunci%");
+        })
+        ->paginate(10);
         
         $totalKeluarBarang = KeluarBarangCatalog::sum('jumlah_keluar');
         

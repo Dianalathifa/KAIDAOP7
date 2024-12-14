@@ -72,40 +72,53 @@
             </div>
 
             <!-- FORM PENCARIAN DAN FILTER -->
-            <div class="pb-3">
-                <form action="{{ url('viewkatalog') }}" method="get">
-                    <div class="row g-2 align-items-center">
-                        <div class="col-auto">
-                            <input class="form-control" type="search" name="katakunci" value="{{ Request::get('katakunci') }}" placeholder="Cari...">
-                        </div>
-                        <div class="col-auto">
-                            <select class="form-select" name="tahun">
-                                <option value="">Tahun</option>
-                                @foreach($tahunOptions as $tahun)
-                                    <option value="{{ $tahun }}" {{ request('tahun') == $tahun ? 'selected' : '' }}>{{ $tahun }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-auto">
-                            <select class="form-select" name="klasifikasi">
-                                <option value="">Klasifikasi</option>
-                                @foreach($klasifikasiOptions as $klasifikasi)
-                                    <option value="{{ $klasifikasi }}" {{ request('klasifikasi') == $klasifikasi ? 'selected' : '' }}>{{ $klasifikasi }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-auto">
-                            <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Filter</button>
-                        </div>
-                        <div class="col-auto">
-                            <button type="submit" formaction="{{ route('export.excel') }}" class="btn btn-success"><i class="fas fa-file-excel"></i> Unduh Excel</button>
-                        </div>
-                        <div class="col-auto">
-                            <a href="{{ route('tambahbarang') }}" class="btn btn-primary">+ Tambah Data</a>
-                        </div>
-                    </div>
-                </form>
+           <div class="pb-3">
+    <form action="{{ url('viewkatalog') }}" method="get">
+        <div class="row g-2 align-items-center">
+            <div class="col-auto">
+                <input class="form-control" type="search" name="katakunci" value="{{ Request::get('katakunci') }}" placeholder="Cari...">
             </div>
+            <div class="col-auto">
+                <select class="form-select" name="tahun">
+                    <option value="">Tahun</option>
+                    @foreach($tahunOptions as $tahun)
+                        <option value="{{ $tahun }}" {{ request('tahun') == $tahun ? 'selected' : '' }}>{{ $tahun }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-auto">
+                <select class="form-select" name="klasifikasi">
+                    <option value="">Klasifikasi</option>
+                    @foreach($klasifikasiOptions as $klasifikasi)
+                        <option value="{{ $klasifikasi }}" {{ request('klasifikasi') == $klasifikasi ? 'selected' : '' }}>{{ $klasifikasi }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Filter</button>
+            </div>
+            <div class="col-auto">
+                <button type="submit" formaction="{{ route('export.excel') }}" class="btn btn-success"><i class="fas fa-file-excel"></i> Unduh Excel</button>
+            </div>
+            <div class="col-auto">
+                <a href="{{ route('tambahbarang') }}" class="btn btn-primary">+ Tambah Data</a>
+            </div>
+        </div>
+    </form>
+    
+    <!-- Form untuk Import Excel -->
+    <form action="{{ route('katalog.import') }}" method="POST" enctype="multipart/form-data" class="mt-3">
+        @csrf
+        <div class="row g-2 align-items-center">
+            <div class="col-auto">
+                <input type="file" name="file" class="form-control" id="file" required>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Import</button>
+            </div>
+        </div>
+    </form>
+</div>
 
             <div class="table-responsive">
                 <table class="table table-striped">
@@ -231,6 +244,27 @@
                     timer: 1500
                 });
             @endif
+
+            @if (session('success'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: '{{ session('success') }}',
+        });
+    </script>
+@endif
+
+@if (session('error'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal!',
+            text: '{{ session('error') }}',
+        });
+    </script>
+@endif
+
         });
     </script>
 </body>

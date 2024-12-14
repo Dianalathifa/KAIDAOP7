@@ -55,11 +55,11 @@
 
             <form action="{{ route('masukcatalog.index') }}" method="GET" class="mb-3">
                 <div class="row g-2">
-                    <div class="col-md-8">
-                        <input type="text" name="search" class="form-control" placeholder="Cari berdasarkan kode_barang" value="{{ request('search') }}" aria-label="Cari berdasarkan kode barang">
+                <div class="col-auto">
+                        <input class="form-control form-control-sm" type="search" name="katakunci" value="{{ request('katakunci') }}" placeholder="Cari...">
                     </div>
-                    <div class="col-md-4">
-                        <button type="submit" class="btn btn-info w-100">Cari</button>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-sm btn-primary">Cari</button>
                     </div>
                 </div>
             </form>
